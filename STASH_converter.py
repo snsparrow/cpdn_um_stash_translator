@@ -132,7 +132,7 @@ def ReadTimes(stashfile):
 			start_line=line.strip('\n')+','
 			iname=start_line.find("NAME")
 			time_line += start_line[iname:]
-		  elif first_split[0]=='/':
+		  elif first_split[0]=='/' or first_split[0]=='&END' :
 		        time_lines.append(time_line.strip())
 			time_line=""
 		  elif len(time_line)>0:
@@ -214,12 +214,12 @@ def ReadDomains(stashfile):
                         start_line=line.strip('\n')+','
                         iname=start_line.find("NAME")
                         dom_line += start_line[iname:]
-                  elif first_split[0]=='/':
+                  elif first_split[0]=='/' or first_split[0]=='&END' :
                         dom_lines.append(dom_line.strip())
                         dom_line=""
                   elif len(dom_line)>0:
                         dom_line += line.strip('\n')
-        #print dom_lines
+	
 	for dl in dom_lines:
             levs_set="N"
             if len(dl)>0:
@@ -352,7 +352,7 @@ def ReadUses(stashfile):
                         start_line=line.strip('\n')+','
                         iname=start_line.find("NAME")
                         use_line += start_line[iname:]
-                  elif first_split[0]=='/':
+                  elif first_split[0]=='/' or first_split[0]=='&END' :
                         use_lines.append(use_line.strip())
                         use_line=""
                   elif len(use_line)>0:
@@ -440,7 +440,10 @@ def lookupSTASH(stash_code,model_id):
  	csvfile=open(stash_lookup,'rb')
         ref_stash = csv.DictReader(csvfile)
         csvfile.close
-	
+	name=""
+	CMOR_name=""
+	units=""
+
 	for row in ref_stash:
 	   if row["STASH"]==str(stash_code) and row["ID"]==str(model_id):
 		name=row["STASHmaster description"]
