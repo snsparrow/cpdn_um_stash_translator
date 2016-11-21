@@ -5,7 +5,7 @@
 # Created: Sarah Sparrow 18/11/16
 # Details: Run with inputs stash file and STASH lookup csv.
 #-----------------------------------------------------------------------
-import os, sys, time
+import getopt,os, sys, time
 import numpy as np
 import csv
 
@@ -64,6 +64,45 @@ LOCN={1:"Dump store with user specified tag",2:"Dump store with climate mean tag
 
 #-----------------------------------------------------
 stash_lookup="Stash_lookup.csv"
+
+
+class Vars:
+        #input command line variables
+        display=False
+        stashfile=""
+        pass
+
+
+##############################################################################
+
+
+def Usage():
+        print "Usage :  --display       outputs csv to screen as well as file\n"\
+        "       --stashfile=         specify stashc file to translate"
+
+        sys.exit()
+
+
+##############################################################################
+
+
+def ProcessCommandLineOpts():
+
+        # Process the command line arguments
+        try:
+                opts, args = getopt.getopt(sys.argv[1:],'',
+                ['display','stashfile='])
+
+                if len(opts) == 0:
+                        Usage()
+                for opt, val in opts:
+                        if opt == '--display':
+                                Vars.display=True
+                        elif opt == '--stashfile':
+                                Vars.stashfile=val
+        except getopt.GetoptError:
+                Usage()
+
 
 
 #----------------------------------------------------
@@ -340,7 +379,7 @@ def ReadStash(stashfile,time_dict,dom_dict,use_dict):
         f = open(stashfile, 'r')
 	out_file=open(stashfile+'.csv','w')
         stash_writer=csv.writer(out_file,delimiter=',')
-	stash_writer.writerow(["Model", "Stash code", "Name", "Units", "Spatial Domain", "Time Sampling and Output","Output File"])
+	stash_writer.writerow(["Model", "Stash code", "Name", "Units","CMOR Name", "Spatial Domain", "Time Sampling and Output","Output File"])
 	for line in f:
                 linetrim=line.strip()
                 linesplit=linetrim.split(',')
@@ -352,7 +391,8 @@ def ReadStash(stashfile,time_dict,dom_dict,use_dict):
                                 model=int(first_split[2])
                                 item=get_stash_item(linesplit,time_dict,dom_dict,use_dict,acount)
 				stash_writer.writerow(item)
-				print item
+				if Vars.display==True:
+					print item
         f.close
 	out_file.close
 
@@ -380,7 +420,7 @@ def get_stash_item(line,time_dict,dom_dict,use_dict,acount):
 			use=value
 	
 	stash_code=stash_sec+stash_item
-	name,units=lookupSTASH(stash_code,model)
+	name,units,CMOR_name=lookupSTASH(stash_code,model)
 	if acount>2:
 		tval=time_dict[MODELS[model]+" Coupling Time "+str(time)]
 		dval=dom_dict[MODELS[model]+" Coupling Domain "+str(domain)]
@@ -393,7 +433,7 @@ def get_stash_item(line,time_dict,dom_dict,use_dict,acount):
 	out_dom=dval[0]+" "+dval[1]
 	out_file=uval[0]+" "+uval[1]
 
-	return MODELS[model],stash_code,name,units,out_dom,out_time,out_file
+	return MODELS[model],stash_code,name,units,CMOR_name,out_dom,out_time,out_file
 
 #----------------------------------------------------
 def lookupSTASH(stash_code,model_id):
@@ -404,21 +444,20 @@ def lookupSTASH(stash_code,model_id):
 	for row in ref_stash:
 	   if row["STASH"]==str(stash_code) and row["ID"]==str(model_id):
 		name=row["STASHmaster description"]
+		CMOR_name=row["CF standard name"]
 		units=row["Units"]
-	return name,units
+	return name,units,CMOR_name
 
 #----------------------------------------------------
-def main():
-	stashfile=sys.argv[1]
+if __name__ == "__main__":
+        # Firstly read any command line options
+        ProcessCommandLineOpts()
 
-
-	timeDict=ReadTimes(stashfile)
-	domDict=ReadDomains(stashfile)
-	useDict=ReadUses(stashfile)
-	ReadStash(stashfile,timeDict,domDict,useDict)
-
+	timeDict=ReadTimes(Vars.stashfile)
+	domDict=ReadDomains(Vars.stashfile)
+	useDict=ReadUses(Vars.stashfile)
+	ReadStash(Vars.stashfile,timeDict,domDict,useDict)
         
 	print "Finished!"
 
-main()
 
