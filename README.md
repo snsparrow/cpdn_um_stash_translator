@@ -5,7 +5,8 @@ _This code can be used with different UM versions by updating the dignostic defi
 
 The main program STASH_converter.py is run with a commandline input of the STASH file to read.  
 
-Usage :  --display       outputs csv to screen as well as file/n
+Usage :  --display       outputs csv to screen as well as file
+
          --stashfile=         specify stashc file to translate
 
 Output:  \<stashfile\>.csv 
