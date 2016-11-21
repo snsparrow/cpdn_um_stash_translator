@@ -174,7 +174,7 @@ def ReadTimes(stashfile):
 			        ntimes=int(itl2[1])
 			elif itl2[0].strip()=="ISER":
 				ts_set="Y"
-				tslist=dl.split("ISER=")
+				tslist=tl.split("ISER=")
                                 ts_list=tslist[1].split("UNT3=")
                                 tsl_out=ts_list[0].strip()
                                 ts_levs=tsl_out[:-1]	
