@@ -6,13 +6,14 @@ _This code can be used with different UM versions by updating the dignostic defi
 The main program STASH_converter.py is run with a commandline input of the STASH file to read.  
 
 Usage :
-<code>
+
 	--display       outputs csv to screen as well as file
-	--stashfile=         specify stashc file to translate
-</code>
+	--stashfile=    specify stashc file to translate
+
 
 Output:  
-	<code>\<stashfile\>.csv</code> 
+
+	<stashfile>.csv 
 
 The output file presents all the STASH items spatial domains, temporal sampling, output frequeny and output file in a more human readable format.
 The output includes the STASH item description, units and CMOR name (when known). 
