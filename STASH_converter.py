@@ -141,6 +141,7 @@ def ReadTimes(stashfile):
 	for tl in time_lines:
 	    pp_set="N"
 	    sp_set="N"
+	    ts_set="N"
             if len(tl)>0:
                 tl1=tl.split(",")
                 time_name=tl1[0]
@@ -169,12 +170,24 @@ def ReadTimes(stashfile):
                                 fre_out=int(itl2[1])
 			elif itl2[0].strip()=="UNT3":
                                 output_period_unit=UNT[itl2[1][1:-1].strip()]
+			elif itl2[0].strip()=="ITIMES":
+			        ntimes=int(itl2[1])
+			elif itl2[0].strip()=="ISER":
+				ts_set="Y"
+				tslist=dl.split("ISER=")
+                                ts_list=tslist[1].split("UNT3=")
+                                tsl_out=ts_list[0].strip()
+                                ts_levs=tsl_out[:-1]	
 		if pp_set=="Y":
 			processing_period=": process every "+str(processing_period_val)+" "+processing_period_unit
 			ttype += processing_period
 		if sp_set=="Y":
 			sampling_period=": sample every "+str(sampling_period_val)+" "+sampling_period_unit
 			ttype += sampling_period
+
+		if ts_set=="Y":
+			output_period=": output every "+str(fre_out)+" "+output_period_unit+" on "+output_period_unit+" "+ts_levs
+                        ttype += output_period
 		if end_out==-1:
 			output_period=": output every "+str(fre_out)+" "+output_period_unit+" from "+output_period_unit[:-1]+" "+str(start_out)+" onwards"
 			ttype += output_period
@@ -240,11 +253,14 @@ def ReadDomains(stashfile):
                         elif idl2[0].strip()=="LEVT":
                                 tlev=int(idl2[1])
                         elif idl2[0].strip()=="LEVLST" or idl2[0].strip()=="RLEVLST":
+				llist=dl.split("LEVLST=");
+				lev_list=llist[1].split("PLT=")
 				if idl2[0].strip()=="RLEVLST":
 					levs_unit="hPa"
 				else:
 					levs_unit=""
-                                levs_out=idl2[1].strip()
+				olev=lev_list[0].strip()
+				levs_out=olev[:-1]
                         elif idl2[0].strip()=="IOPA":
                                 iopav=int(idl2[1])
 				horiz_domain=IOPA[iopav]
@@ -272,7 +288,10 @@ def ReadDomains(stashfile):
                                 	value=int(idl2[1])
                                 pseudo_lev_type=PLT[value]
 			elif idl2[0].strip()=="PSLIST":
-                                ps_levs=idl2[1].strip()
+				pslist=dl.split("LIST=");
+				ps_list=pslist[1].split("TS=")
+                                psl_out=ps_list[0].strip()
+				ps_levs=psl_out[:-1]
 			elif idl2[0].strip()=="TS":
 				ts_switch=idl2[1].strip()
 			elif idl2[0].strip()=="TSNUM":
@@ -298,7 +317,13 @@ def ReadDomains(stashfile):
 				lev_text=": level "+str(blev)+" to "+str(tlev)
 			elif levs_set_val==2:
 				lev_text=": levels "+levs_out+levs_unit
-                        dtype += lev_text
+		try:
+                	lev_text=": levels "+levs_out+levs_unit
+		except:
+			lev_text=""	
+		
+		dtype += lev_text
+		
 		if iopav==9:
 			horiz_domain_type=": horizontal domain bounds "+str(nlim)+"N, "+str(slim)+"S, "+str(elim)+"E, "+str(wlim)+"W" 
 		elif iopav==10:
