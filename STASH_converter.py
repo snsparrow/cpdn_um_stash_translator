@@ -235,6 +235,10 @@ def ReadDomains(stashfile):
 	
 	for dl in dom_lines:
             levs_set="N"
+	    levs_unit=""
+	    levs_out=""
+	    pslevs_out=""
+	    ps_levs=""
             if len(dl)>0:
                 dl1=dl.split(",")
                 dom_name=dl1[0]
