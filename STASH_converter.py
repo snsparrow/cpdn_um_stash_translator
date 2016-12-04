@@ -232,14 +232,15 @@ def ReadDomains(stashfile):
                         dom_line=""
                   elif len(dom_line)>0:
                         dom_line += line.strip('\n')
-	
+
 	for dl in dom_lines:
             levs_set="N"
 	    levs_unit=""
 	    levs_out=""
 	    pslevs_out=""
 	    ps_levs=""
-            if len(dl)>0:
+            horiz_domain=""
+	    if len(dl)>0:
                 dl1=dl.split(",")
                 dom_name=dl1[0]
                 for idl in dl1:
@@ -327,13 +328,13 @@ def ReadDomains(stashfile):
 			lev_text=""	
 		
 		dtype += lev_text
-		
+
 		if iopav==9:
 			horiz_domain_type=": horizontal domain bounds "+str(nlim)+"N, "+str(slim)+"S, "+str(elim)+"E, "+str(wlim)+"W" 
 		elif iopav==10:
 			horiz_domain_type=": horizontal domain bounds in gridpoints (N,S,E,W) "+str(int(nlim))+", "+str(int(slim))+", "+str(int(elim))+", "+str(int(wlim)) 
 		else:
-			horiz_domin_type=": horizontal domain "+horiz_domain
+			horiz_domain_type=": horizontal domain "+horiz_domain
 		dtype += horiz_domain_type
 		dtype += ": "+mask
 		
@@ -349,7 +350,6 @@ def ReadDomains(stashfile):
 			dtype +=": "+ts_domains+" time series domains"
 
 		dom_dict[dom_name]=[dname,dtype]
-
 	return dom_dict
 
 #----------------------------------------------------
