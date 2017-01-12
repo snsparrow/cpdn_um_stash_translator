@@ -118,6 +118,7 @@ def ReadTimes(stashfile):
 	          linetrim=line.strip()
 		  linesplit=linetrim.split(',')
 		  first_split=linesplit[0].split(' ')
+		  last_split=linesplit[-1].split(' ')
 		  if first_split[0]=='&STASHNUM':
                         acount +=1
 		  if first_split[0]=='&STREQ':
@@ -132,7 +133,7 @@ def ReadTimes(stashfile):
 			start_line=line.strip('\n')+','
 			iname=start_line.find("NAME")
 			time_line += start_line[iname:]
-		  elif first_split[0]=='/' or first_split[0]=='&END' :
+		  elif first_split[0]=='/' or first_split[0]=='&END' or last_split[-1]=='/' or last_split[-1]=='&END':
 		        time_lines.append(time_line.strip())
 			time_line=""
 		  elif len(time_line)>0:
@@ -213,6 +214,7 @@ def ReadDomains(stashfile):
                   linetrim=line.strip()
                   linesplit=linetrim.split(',')
                   first_split=linesplit[0].split(' ')
+		  last_split=linesplit[-1].split(' ')
 		  if first_split[0]=='&STASHNUM':
                         acount +=1
                   if first_split[0]=='&STREQ':
@@ -227,7 +229,7 @@ def ReadDomains(stashfile):
                         start_line=line.strip('\n')+','
                         iname=start_line.find("NAME")
                         dom_line += start_line[iname:]
-                  elif first_split[0]=='/' or first_split[0]=='&END' :
+                  elif first_split[0]=='/' or first_split[0]=='&END' or last_split[-1]=='/' or last_split[-1]=='&END':
                         dom_lines.append(dom_line.strip())
                         dom_line=""
                   elif len(dom_line)>0:
@@ -367,6 +369,7 @@ def ReadUses(stashfile):
                   linetrim=line.strip()
                   linesplit=linetrim.split(',')
                   first_split=linesplit[0].split(' ')
+		  last_split=linesplit[-1].split(' ')
 		  if first_split[0]=='&STASHNUM':
 		  	acount +=1
                   if first_split[0]=='&STREQ':
@@ -381,7 +384,7 @@ def ReadUses(stashfile):
                         start_line=line.strip('\n')+','
                         iname=start_line.find("NAME")
                         use_line += start_line[iname:]
-                  elif first_split[0]=='/' or first_split[0]=='&END' :
+                  elif first_split[0]=='/' or first_split[0]=='&END' or last_split[-1]=='/' or last_split[-1]=='&END':
                         use_lines.append(use_line.strip())
                         use_line=""
                   elif len(use_line)>0:
@@ -398,7 +401,6 @@ def ReadUses(stashfile):
 				value=int(iul2[1])
 				file_type=LOCN[value]
 		use_dict[use_name]=[out_file,file_type]
-	
 	return use_dict
 
 #----------------------------------------------------
