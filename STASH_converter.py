@@ -400,6 +400,23 @@ def ReadUses(stashfile):
 			elif iul2[0].strip()=="LOCN":
 				value=int(iul2[1])
 				file_type=LOCN[value]
+			elif iul2[0].strip()=="IUNT" and (value == 2):
+                                meantag=int(iul2[1].split("/")[0])
+                                mean_periods=format(meantag, '04b')
+			elif iul2[0].strip()=="IUNT":
+                                iunt=iul2[1].split("/")[0]
+                               	 
+		if value ==2:
+			count=1
+			file_type+=" Meaning periods:"
+			for c in str(mean_periods):
+				if int(c)==1:
+					file_type+=" M"+str(count)
+				count+=1
+		elif value in [1,6]:
+			file_type+=" "+iunt
+		else:
+			file_type+=" PP file "+iunt
 		use_dict[use_name]=[out_file,file_type]
 	return use_dict
 
