@@ -63,13 +63,14 @@ LOCN={1:"Dump store with user specified tag",2:"Dump store with climate mean tag
 
 
 #-----------------------------------------------------
-stash_lookup="Stash_lookup.csv"
+stash_lookup="stash_lookup.csv"
 
 
 class Vars:
         #input command line variables
         display=False
         stashfile=""
+	scriptdir=""
         pass
 
 
@@ -79,7 +80,7 @@ class Vars:
 def Usage():
         print "Usage :  --display       outputs csv to screen as well as file\n"\
         "       --stashfile=         specify stashc file to translate"
-
+	"       --scriptdir=		optional filepath for repository location"
         sys.exit()
 
 
@@ -91,7 +92,7 @@ def ProcessCommandLineOpts():
         # Process the command line arguments
         try:
                 opts, args = getopt.getopt(sys.argv[1:],'',
-                ['display','stashfile='])
+                ['display','stashfile=','scriptdir='])
 
                 if len(opts) == 0:
                         Usage()
@@ -100,6 +101,8 @@ def ProcessCommandLineOpts():
                                 Vars.display=True
                         elif opt == '--stashfile':
                                 Vars.stashfile=val
+			elif opt == '--scriptdir':
+			        Vars.scriptdir=val
         except getopt.GetoptError:
                 Usage()
 
@@ -425,7 +428,7 @@ def ReadStash(stashfile,time_dict,dom_dict,use_dict):
         print "Translating STASH file ",stashfile
         acount=0
         f = open(stashfile, 'r')
-	out_file=open(stashfile+'.csv','w')
+	out_file=open(odir+stashfile+'.csv','w')
         stash_writer=csv.writer(out_file,delimiter=',')
 	stash_writer.writerow(["Model", "Stash code", "Name", "Units","CMOR Name", "Spatial Domain", "Time Sampling and Output","Output File"])
 	for line in f:
@@ -485,7 +488,7 @@ def get_stash_item(line,time_dict,dom_dict,use_dict,acount):
 
 #----------------------------------------------------
 def lookupSTASH(stash_code,model_id):
- 	csvfile=open(stash_lookup,'rb')
+ 	csvfile=open(Vars.scriptdir+stash_lookup,'rb')
         ref_stash = csv.DictReader(csvfile)
         csvfile.close
 	name=""
