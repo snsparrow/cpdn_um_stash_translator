@@ -456,8 +456,12 @@ def get_stash_item(line,time_dict,dom_dict,use_dict,acount):
 		result=item.split('=')
 		if i==len(line)-1:
 		 	r=result[-1]
-			r.split('/')
-			value=int(r[0])
+			r2=r.strip()
+			if r2[-1]=='/':
+				r3=r.split('/')
+			else:
+				r3=r.split('&END')
+			value=int(r3[0])
 		else:
 			value=int(result[-1])
 		if i==0:
