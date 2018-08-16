@@ -150,7 +150,8 @@ def ReadTimes(stashfile):
                 tl1=tl.split(",")
                 time_name=tl1[0]
                 for itl in tl1:
-                        itl2=itl.split("=")
+                    itl2=itl.split("=")
+		    if len(itl2)>1 and itl2[1]!='':
                         if itl2[0].strip()=="NAME":
                                 tname=itl2[1][1:-1]
                         elif itl2[0].strip()=="ITYP":
@@ -249,7 +250,8 @@ def ReadDomains(stashfile):
                 dl1=dl.split(",")
                 dom_name=dl1[0]
                 for idl in dl1:
-                        idl2=idl.split("=")
+                    idl2=idl.split("=")
+		    if len(idl2)>1 and idl2[1]!='':
                         if idl2[0].strip()=="NAME":
                                 dname=idl2[1][1:-1]
                         elif idl2[0].strip()=="IOPL":
@@ -397,7 +399,8 @@ def ReadUses(stashfile):
 		ul1=ul.split(",")
 		use_name=ul1[0]
 		for iul in ul1:
-			iul2=iul.split("=")
+		    iul2=iul.split("=")
+		    if len(iul2)>1 and iul2[1]!='':
 			if iul2[0].strip()=="NAME":
 				out_file=iul2[1][1:-1]
 			elif iul2[0].strip()=="LOCN":
@@ -428,7 +431,7 @@ def ReadStash(stashfile,time_dict,dom_dict,use_dict):
         print "Translating STASH file ",stashfile
         acount=0
         f = open(stashfile, 'r')
-	out_file=open(odir+stashfile+'.csv','w')
+	out_file=open(stashfile+'.csv','w')
         stash_writer=csv.writer(out_file,delimiter=',')
 	stash_writer.writerow(["Model", "Stash code", "Name", "Units","CMOR Name", "Spatial Domain", "Time Sampling and Output","Output File"])
 	for line in f:
